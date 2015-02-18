@@ -77,8 +77,8 @@ var = "var"
 break = "break"
 continue = "continue"
 
-reserved
-  = ( true
+reserved_base
+  = true
   / false
   / null
   / struct
@@ -97,7 +97,10 @@ reserved
   / do
   / new
   / var
-  / yield ) !identifier
+  / yield
+
+reserved
+  = reserved_base !id_base
 
 typename
   = "int"
@@ -107,11 +110,14 @@ typename
   / "void"
   / "bool"
 
+id_base
+  = x:[_a-zA-Z$]+ { return x.join(''); }
+
 identifier
-  = !reserved first:[_a-zA-Z$] rest:[_a-zA-Z0-9$]* { return first+rest.join(""); }
+  = !reserved first:id_base { return first; }
 
 variable_name
-  = !typename first:[_a-zA-Z$] rest:[_a-zA-Z0-9$]* { return first+rest.join(""); }
+  = !typename first:id_base { return first; }
 
 
 program
@@ -406,4 +412,3 @@ loop_statement
   / loop ows "(" ows name:variable_name ws in ws iterable:additive_expression ")" ows body:non_capture_block { return {_type:'inferred loop statement', name:name, iterable:iterable, block:body } }
  / loop ows "(" ows cond:expression ows ")" ows body:non_capture_block { return {_type:'conditional loop statement', cond:cond, block:body } }
   / loop ows body:non_capture_block { return {_type:'simple loop statement', block:body } }
-
