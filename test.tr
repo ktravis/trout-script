@@ -1,0 +1,151 @@
+fn assert_equal(a:dynamic, b:dynamic) void {
+  assert(a == b)
+}
+var other_assert:fn(dynamic,dynamic) = assert_equal
+
+// declaration
+var a:int;
+assert_equal(a, null)
+var b = 2
+assert_equal(b, 2)
+const var c:int = 3
+assert_equal(c, 3)
+var d:dynamic = 4
+assert_equal(d, 4)
+
+// assignment
+a = 1
+assert_equal(a, 1)
+b = 0
+assert_equal(b, 0)
+a += 1
+assert_equal(a, 2)
+a *= 2
+assert_equal(a, 4)
+a /= 2
+assert_equal(a, 2)
+
+// references
+var ref:&int = &a
+assert_equal(ref, 2)
+a = 3
+assert_equal(ref, 3)
+a = ref + ref
+assert_equal(a, 6)
+assert_equal(ref, 6)
+
+var f = a
+assert_equal(f, 6)
+
+var accumulator = 1
+
+fn thing(arg:int) fn(int)int {
+  return fn(x:int) -> 2*x + arg
+}
+
+var fact:fn(int)int;
+fact = fn(x:int) int { // soooo slowwwww
+    if (x > 1) { 
+        return fact(x-1) * x
+    } else {
+      return 1
+    }
+    return x
+}
+
+print(fact(3))
+print(fact(4))
+print(fact(5))
+
+var fib:fn(int)int
+fib = fn(x:int) int { // soooo slowwwww
+    if (x > 1) { return fib(x-1) + fib(x-2) }
+    return x
+}
+fn fib_loop(x:int) int {
+  var out = 0;
+  var cur = 1;
+  loop (x-- > 0) {
+    out += cur
+    cur = out - cur
+  }
+  return out
+}
+fn fact_loop(x:int) int {
+  var out = 1
+  loop (x > 0) {
+    out *= x--
+  }
+  return out
+}
+assert_equal(fib(7), 13) // 1 1 2 3 5 8 13
+
+print(fib_loop(7))
+print(fib_loop(-7))
+
+// loop v. recursion test
+//var i = 0
+//loop (++i < 50) {
+//  if (i % 2 == 0) { continue }
+//  print(i)
+//}
+
+struct vec {
+  x:int = 0,
+  y:int = 0
+}
+struct Node {
+  val:string
+  next:Node
+}
+
+fn print_vec(v:vec) {
+  print("{ x: "|to_string(v.x)|", y: "|to_string(v.y)|" }")
+}
+
+fn list_to_string(head:Node) string {
+  var out:string = to_string(head.val)
+  loop (head.next != null) {
+    head = head.next
+    out = out | " " | to_string(head.val)
+  }
+  return out
+}
+fn cons(v:string, rest:Node) Node {
+  var head:Node
+  head.val = v
+  head.next = rest
+  return head
+}
+fn list(v:string) Node {
+  var out:Node
+  out.val = v
+  return out
+}
+
+var last:Node
+last.val = "last-one"
+var da:Node
+da.next = last
+da.val = "d-a"
+var ca:Node
+ca.next = da
+ca.val = "c-a"
+var ba:Node
+ba.next = ca
+ba.val = "b-a"
+var aa:Node
+aa.next = ba
+aa.val = "a-a"
+var head:Node
+head.next = aa
+head.val = "head-thing"
+
+print(list_to_string(head))
+ca.val = "C-A-MODIFIED"
+print(list_to_string(head))
+
+// this compilation is super slow, look at nested calls
+print(list_to_string(cons('a', cons('b', cons('c', list('d'))))))
+
+print("All tests passed! ~~~~")
