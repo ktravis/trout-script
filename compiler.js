@@ -94,8 +94,8 @@ Compiler.prototype.get_var = function (name) {
   return this.current_scope.get_var(name);
 };
 Compiler.prototype.get_type = function (type_name) {
-	_t = type_name
-	type_name = clean_type(type_name);
+  _t = type_name
+  type_name = clean_type(type_name);
   if (type_name in this.primitives)
     return this.primitives[type_name];
   var t = this.current_scope.get_var(type_name);
@@ -191,7 +191,7 @@ Compiler.prototype.resolve_node = function (node) {
       if (this.in_mode('loop')) {
         str += this.get_statement_string('runtime.pop_scope()');
       }
-      str += this.get_statement_string('return'+(val !== null ? ' '+val.str : ''));
+      str += this.get_statement_string('return'+(val !== null ? ' _ret_val' : ''));
       output = Node(str, t, node, val === null ? [] : val.dependencies); 
       break;
     case "continue":
@@ -472,7 +472,6 @@ Compiler.prototype.resolve_operation = function (node) {
 };
 
 Compiler.prototype.resolve_variable = function(node) {
-  // have some arg here that is like "expand_reference" which gets set when on rhs
   if (this.has_local(node.name))
     return Node(this.scope_str+".get_variable_absolute('"+node.name+"')", this.get_var(node.name).type, node, [node.name]);
   else {
@@ -639,12 +638,12 @@ Compiler.prototype.resolve_struct_declaration = function (node) {
     }
   } 
   defaults += "}";
-  this.current_scope.get_var(node.name).members = members;
+  this.get_type(node.name).members = members;
   return Node(this.scope_str+".declare_struct('"+node.name+"', "+JSON.stringify(members)+", "+defaults+")", 'type', node, deps);
 };
 Compiler.prototype.resolve_member = function (node) {
   var of = this.resolve_node(node.of);
-  var t = this.current_scope.get_var(of.type);
+  var t = this.get_type(of.type);
   if (!t.members.hasOwnProperty(node.property))
     this.fail("Type '"+of.type+"' has no member '"+node.property+"'.");
   return Node(this.scope_str+".get_member("+of.str+",\'"+node.property+"\')", t.members[node.property], node, of.dependencies);

@@ -235,6 +235,8 @@ var string_methods = {
 var tr_std_functions = {
 	'print': {type:'fn(dynamic)void',const:true,args:['dynamic'],returns:'void'},
 	'to_string': {type:'fn(dynamic)string',const:true,args:['dynamic'],returns:'string'},
+	'strlen': {type:'fn(string)int',const:true,args:['string'],returns:'int'},
+	'substr': {type:'fn(string,int,int)string',const:true,args:['string','int','int'],returns:'string'},
 	'typeof': {type:'fn(dynamic)string',const:true,args:['dynamic'],returns:'string'},
 	'sqrt': {type:'fn(dynamic)float',const:true,args:['dynamic'],returns:'float'},
 	'assert': {type:'fn(bool)void',const:true,args:['bool'],returns:'void'}
@@ -275,6 +277,22 @@ function tr_setup_functions (runtime) {
 		runtime.create_function(['obj'],['dynamic'], 'string', [], function (scope) {
 			var v = scope.get_variable('obj').value;
 			return new TrObject('string', v !== null ? v.toString() : 'null');
+		})
+	);
+	runtime.current_scope.declare('substr', 'fn(string,int,int)string');
+	runtime.current_scope.assign_variable('substr', 
+		runtime.create_function(['s','i','n'],['string','int','int'], 'string', [], function (scope) {
+			var v = scope.get_variable('s').value;
+			var i = scope.get_variable('i').value;
+			var n = scope.get_variable('n').value || undefined;
+			return new TrObject('string', v.substr(i, n));
+		})
+	);
+	runtime.current_scope.declare('strlen', 'fn(string)int');
+	runtime.current_scope.assign_variable('strlen', 
+		runtime.create_function(['s'],['string'], 'int', [], function (scope) {
+			var v = scope.get_variable('s').value;
+			return new TrObject('int', v.length || 0);
 		})
 	);
 	runtime.current_scope.declare('sqrt', 'fn(dynamic)float');

@@ -122,6 +122,30 @@ fn list(v:string) Node {
   out.val = v
   return out
 }
+struct Stack {
+  top:Node
+  size:int = 0
+}
+fn push(stack:Stack, v:string) int {
+  var n:Node
+  n.val = v
+  n.next = stack.top
+  stack.top = n
+  return ++stack.size
+}
+fn pop(stack:Stack) string {
+  print("popping from stack with size "|to_string(stack.size))
+  if (stack.size < 1) {
+    return null
+  }
+  stack.size--
+  var n = stack.top
+  stack.top = n.next
+  return n.val
+}
+fn peek(stack:Stack) string {
+  return stack.top.val
+}
 
 var last:Node
 last.val = "last-one"
@@ -145,7 +169,21 @@ print(list_to_string(head))
 ca.val = "C-A-MODIFIED"
 print(list_to_string(head))
 
-// this compilation is super slow, look at nested calls
 print(list_to_string(cons('a', cons('b', cons('c', list('d'))))))
+
+var stack:Stack
+
+var input:string = "omgsomuchinput"
+var n = strlen(input)
+print("length of input string: "|to_string(n))
+var i = 0
+loop (i < n) {
+  var char = substr(input,i++,1)
+  if (char == 'u') {
+    print("UUUUUUUUUUUU")
+  } else {
+    print(char)
+  }
+}
 
 print("All tests passed! ~~~~")
