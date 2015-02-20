@@ -13,7 +13,7 @@ try {
 	ast = parser.parse(source);	
 } catch (e) {
 	var error = e.name+": line "+e.line+", column "+e.column+":\n";
-	error += source.split('\n')[e.line - 1].replace(/\t/g, ' ');
+	error += source.split('\n')[e.line - 1].replace(/\t/g, ' ') + '\n';
 	for (var i = 0; i < e.column; i++) {
 		error += (i === e.column - 1) ? '^' : '-';
 	}
