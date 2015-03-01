@@ -109,6 +109,7 @@ typename
   / "dynamic"
   / "void"
   / "bool"
+  / "type"
 
 id_base
   = x:[_a-zA-Z$]+ { return x.join(''); }
@@ -371,7 +372,7 @@ type_signature
       if (ret === null) ret = {_type:'type', name: 'void'};
       return { _type:'function type', params: params, returns: ret, name:name } 
     }
-  / name:("*"? "&"? identifier) { return { _type:'type', name:name.join("") } }
+  / parts:("*"? "&"? identifier) { return { _type:'type', name:parts.join('') } }
 
 type_parameters
   = first:type_signature ows "," ows rest:type_parameters { rest.unshift(first); return rest; }

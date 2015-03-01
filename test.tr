@@ -54,8 +54,11 @@ fact = fn(x:int) int { // soooo slowwwww
 }
 
 print(fact(3))
+print('called fact once')
 print(fact(4))
+print('called fact twice')
 print(fact(5))
+print('called fact thrice')
 
 var fib:fn(int)int
 fib = fn(x:int) int { // soooo slowwwww
@@ -79,9 +82,12 @@ fn fact_loop(x:int) int {
   return out
 }
 assert_equal(fib(7), 13) // 1 1 2 3 5 8 13
+print('called fib once')
 
 print(fib_loop(7))
+print('called fib_loop once')
 print(fib_loop(-7))
+print('called fib_loop twice')
 
 // loop v. recursion test
 //var i = 0
