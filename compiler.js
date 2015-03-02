@@ -99,7 +99,7 @@ Compiler.prototype.get_type = function (type_name) {
   if (type_name in this.primitives)
     return this.primitives[type_name];
   var t = this.current_scope.get_var(type_name);
-  if (t === null)
+  if (t.type != 'type') // t === null
     this.fail("Unknown type \'"+_t+"\'.");
   return t;
 };
@@ -638,6 +638,7 @@ Compiler.prototype.resolve_struct_declaration = function (node) {
 Compiler.prototype.resolve_member = function (node) {
   var of = this.resolve_node(node.of);
   var t = this.get_type(of.type);
+
   if (!t.members.hasOwnProperty(node.property))
     this.fail("Type \'"+of.type+"\' has no member \'"+node.property+"\'.");
   return Node(this.scope_str+".get_member("+of.str+",\'"+node.property+"\')", t.members[node.property], node, of.dependencies);
