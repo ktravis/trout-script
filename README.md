@@ -17,7 +17,7 @@ clean everything up.*
 
 ## Examples
 
-  ```
+  ```c
   var x = 1  // inferred type
   var y:int  // not initialized, but declared
   var hello:string
@@ -34,9 +34,8 @@ clean everything up.*
   }
 
   // functions declared with 'fn' and '(' arguments ')'
-  fn factorial(x:int) int { // return type can be inferred by compiler, or
-  specified following arguments
-    var out = 1
+  fn factorial(x:int) int { // return type can be inferred by compiler
+    var out = 1             // specified following arguments
     loop (x > 0) {
       out *= x--
     }
