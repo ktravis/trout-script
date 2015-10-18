@@ -192,4 +192,10 @@ loop (i < n) {
   }
 }
 
+fn apply(f:fn(int)int, y:int) int {
+    return f(y)
+}
+fn z(x:int)int { return x * 2 }
+print('answer: '|to_string(apply(z, 3)))
+
 print("All tests passed! ~~~~")
